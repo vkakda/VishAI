@@ -121,7 +121,7 @@ export default function Chat({ userId }) {
   };
 
   return (
-    <div className="flex flex-col max-w-md mx-auto h-screen bg-gray-50 shadow-lg rounded-lg overflow-hidden mt-4">
+    <div className="flex flex-col max-w-md mx-auto max-h-screen bg-gray-50 shadow-lg rounded-lg overflow-hidden mt-4">
       {/* Header */}
       <div className="bg-blue-600 text-white text-center py-3 font-semibold">
         VishAI: talk to me
@@ -130,7 +130,7 @@ export default function Chat({ userId }) {
       {/* Chat Area */}
       <div
         ref={chatContainerRef}
-        className="flex-1 p-4 pb-24 overflow-y-auto space-y-3"
+        className="flex-1 p-4 pb-12 overflow-y-auto space-y-3"
       >
         {messages.map((m, i) => (
           <div
