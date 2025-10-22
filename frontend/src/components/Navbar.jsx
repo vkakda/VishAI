@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow-md p-4 flex justify-between items-center">
       <h1 className="font-bold text-xl text-indigo-600">
-        SpeakEng
+        VishAI
       </h1>
       <div className="space-x-4">
         <Link to="/" className="hover:text-indigo-500">Home</Link>
