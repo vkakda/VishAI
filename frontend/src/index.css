@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+.typewrite{
+  overflow-x: hidden;
+  white-space: nowrap;
+  border-right: 2px solid black;
+  animation: typing 4s steps(30, end), blink 0.8s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 69% }
+}
+@keyframes blink {
+  50% { border-color:transparent; }
+}
+
+
+@media (max-width: 640px) {
+  .typewrite {
+    overflow-x: hidden;
+    white-space: normal; /* allow wrapping on small screens */
+    border-right: 2px solid black;
+    animation: typing-mobile 4s steps(30, end), blink 0.8s step-end infinite;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  @keyframes typing-mobile {
+    from { width: 0; }
+    to   { width: 100%; }
+  }
+
+  .typewrite h1 {
+    display: inline-block; /* shrink to content and center */
+    font-size: 1.25rem;
+    line-height: 1.2;
+    margin: 0;
+    word-break: break-word;
+    white-space: normal; /* allow wrapping inside the h1 if it overflows the inline-block */
+    vertical-align: middle;
+  }
+}

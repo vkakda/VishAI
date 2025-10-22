@@ -1,0 +1,55 @@
+# Confidential / sensitive files - ignore these so secrets don't get committed
+
+# Environment files
+.env
+.env.*
+.env.local
+.env.*.local
+
+# App credentials and secret stores
+config/secrets.yml
+config/credentials.yml.enc
+credentials.yml
+secrets.yml
+credentials.json
+service-account.json
+google-services.json
+GoogleService-Info.plist
+local.settings.json
+
+# Private keys & certificates
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.crt
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+certs/
+keys/
+
+# Cloud provider credentials
+.aws/
+.aws/credentials
+.gcloud/
+.azure/
+google-cloud-key.json
+
+# Package manager auth files
+.npmrc
+.yarnrc
+.pnpmfile.cjs
+.netrc
+
+# Database files that may include sensitive data
+*.sqlite3
+*.db
+*.sql
+*.dump
+
+# Editor/IDE local settings that may contain secrets
+.vscode/settings.json
+.idea/
