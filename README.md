@@ -33,7 +33,7 @@ VishAI is a full-stack demo application (MERN-style) that provides a simple AI c
 
 Create a `.env` file in the `backend/` directory with the following variables (names inferred from code):
 
-- `PORT` - Port for the backend server (e.g., `5000`)
+- `PORT` - Port for the backend server (e.g., `1234`)
 - `MONGO_URI` - MongoDB connection string
 - `JWT_SECRET` - Secret used to sign JWT tokens
 - `OPENAI_API_KEY` (optional) - If `aiService.js` uses OpenAI or other AI provider
@@ -91,8 +91,8 @@ Open the app in the browser at the URL shown in the terminal (Vite usually serve
 
 - `POST /api/auth/signup` - Create a new user (signup)
 - `POST /api/auth/login` - Authenticate user and return a JWT
-- `GET /api/user/me` - Get current user's profile (protected)
-- `GET /api/chat` - Get chat history for the user (protected)
+- `GET /api/user/profile` - Get current user's profile (protected)
+- `GET /api/chat/history` - Get chat history for the user (protected)
 - `POST /api/chat` - Post a new chat message (protected)
 
 Refer to files in `backend/routes/` and `backend/controllers/` for exact route paths and request/response shapes.
