@@ -124,7 +124,7 @@ export default function Chat({ userId }) {
     <div className="flex flex-col max-w-md mx-auto h-screen bg-gray-50 shadow-lg rounded-lg overflow-hidden mt-4">
       {/* Header */}
       <div className="bg-blue-600 text-white text-center py-3 font-semibold">
-        SpeakEng 2.0 — AI Speaking Practice
+        VishAI: talk to me
       </div>
 
       {/* Chat Area */}
