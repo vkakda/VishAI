@@ -32,6 +32,16 @@ const frontendOrigins = (process.env.FRONTEND_URLS || 'http://localhost:5173,htt
   .map((u) => u.trim().replace(/\/$/, ''))
   .filter(Boolean);
 
+// Handle upgrade requests for WebSocket
+server.on('upgrade', (request, socket, head) => {
+  const origin = request.headers.origin;
+  if (!frontendOrigins.includes(origin)) {
+    socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+    socket.destroy();
+    return;
+  }
+});
+
 const io = new Server(server, {
   cors: {
     origin: frontendOrigins,
@@ -39,16 +49,20 @@ const io = new Server(server, {
     credentials: true,
     allowedHeaders: ["Authorization", "Content-Type"],
   },
-  pingTimeout: 60000,
-  pingInterval: 25000,
   path: '/socket.io/',
-  transports: ['websocket', 'polling'],
+  transports: ['polling', 'websocket'], // Try polling first
+  pingTimeout: 30000,
+  pingInterval: 10000,
+  upgradeTimeout: 30000,
+  allowUpgrades: true,
+  perMessageDeflate: false, // Disable compression for better stability
+  maxHttpBufferSize: 1e8, // 100 MB
   allowEIO3: true,
-  cookie: {
-    name: "io",
-    httpOnly: true,
-    secure: true,
-    sameSite: "none"
+  cors: {
+    origin: frontendOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Authorization", "Content-Type"]
   }
 });
 

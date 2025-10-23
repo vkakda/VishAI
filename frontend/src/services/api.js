@@ -26,29 +26,50 @@ api.interceptors.request.use((config) => {
 export const createSocket = () => {
   const socket = io(BASE_URL, {
     path: '/socket.io/',
-    transports: ['websocket', 'polling'],
+    transports: ['polling', 'websocket'], // Try polling first
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    randomizationFactor: 0.5,
     timeout: 20000,
+    autoConnect: false, // Manual connection for better control
     withCredentials: true,
     auth: {
       token: localStorage.getItem('token')
+    },
+    forceNew: true,
+    extraHeaders: {
+      "User-Agent": "VisAI-Client"
     }
   });
 
-  // Debug socket connection
-  socket.on('connect', () => {
-    console.log('Socket connected:', socket.id);
-  });
-
+  // Enhanced connection handling
   socket.on('connect_error', (error) => {
     console.error('Socket connection error:', error);
+    // If websocket fails, try polling
+    if (socket.io.opts.transports.includes('websocket')) {
+      console.log('Falling back to polling transport');
+      socket.io.opts.transports = ['polling'];
+      socket.connect();
+    }
+  });
+
+  socket.on('connect', () => {
+    console.log('Socket connected:', socket.id);
+    console.log('Transport:', socket.io.engine.transport.name);
   });
 
   socket.on('disconnect', (reason) => {
     console.log('Socket disconnected:', reason);
+    if (reason === 'io server disconnect') {
+      // Reconnect if server initiated disconnect
+      socket.connect();
+    }
   });
 
+  // Attempt connection
+  socket.connect();
+  
   return socket;
 };
 
