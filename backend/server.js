@@ -35,7 +35,7 @@ const frontendOrigins = (process.env.FRONTEND_URLS || 'http://localhost:5173,htt
 const io = new Server(server, {
   cors: {
     origin: frontendOrigins,
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
     allowedHeaders: ["Authorization", "Content-Type"],
   },
@@ -43,6 +43,13 @@ const io = new Server(server, {
   pingInterval: 25000,
   path: '/socket.io/',
   transports: ['websocket', 'polling'],
+  allowEIO3: true,
+  cookie: {
+    name: "io",
+    httpOnly: true,
+    secure: true,
+    sameSite: "none"
+  }
 });
 
 // Add socket middleware error handler
@@ -56,7 +63,14 @@ io.engine.on("headers", (headers, req) => {
 });
 
 
-app.use(cors());
+// Configure CORS for Express routes
+app.use(cors({
+  origin: frontendOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
+}));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
