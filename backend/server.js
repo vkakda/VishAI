@@ -36,7 +36,23 @@ const io = new Server(server, {
   cors: {
     origin: frontendOrigins,
     methods: ["GET", "POST"],
+    credentials: true,
+    allowedHeaders: ["Authorization", "Content-Type"],
   },
+  pingTimeout: 60000,
+  pingInterval: 25000,
+  path: '/socket.io/',
+  transports: ['websocket', 'polling'],
+});
+
+// Add socket middleware error handler
+io.engine.on("connection_error", (err) => {
+  console.log("Connection error:", err.req.url, err.code, err.message);
+});
+
+io.engine.on("headers", (headers, req) => {
+  // Log successful upgrades for debugging
+  console.log("Socket headers:", req.url);
 });
 
 
@@ -62,7 +78,7 @@ app.get('/api/health', async (req, res) => {
 
 // Socket connection
 io.on("connection", (socket) => {
-  console.log("User connected");
+  console.log("Socket connected:", socket.id);
 
  socket.on("sendMessage", async ({ token, text }) => {
   try {

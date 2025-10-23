@@ -4,8 +4,14 @@ import axios from "axios";
 
 // Normalize base URL and create socket
 const BASE = (import.meta.env.VITE_SERVER_URL || 'http://localhost:5000').replace(/\/$/, '');
-// ✅ Stable socket connection
-const socket = io(BASE, { transports: ["websocket"] });
+// ✅ Enhanced socket connection with reconnection and error handling
+const socket = io(BASE, {
+  transports: ['websocket', 'polling'],
+  path: '/socket.io/',
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000,
+  timeout: 60000,
+});
 
 export default function Chat({ userId }) {
   const [messages, setMessages] = useState([]);
@@ -43,14 +49,38 @@ export default function Chat({ userId }) {
     }
   }, [messages, aiTyping]);
 
-  // ✅ Socket listener for AI replies
+  // ✅ Socket connection handlers and message listener
   useEffect(() => {
+    // Connection event handlers
+    socket.on('connect', () => {
+      console.log('Socket connected:', socket.id);
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
+    });
+
+    socket.on('reconnect_attempt', (attempt) => {
+      console.log(`Socket reconnection attempt ${attempt}`);
+    });
+
+    socket.on('disconnect', (reason) => {
+      console.log('Socket disconnected:', reason);
+    });
+
+    // Message handler
     socket.on("receiveMessage", (msg) => {
       setAiTyping(false); 
       setMessages((prev) => [...prev, msg]);
     });
 
-    return () => socket.off("receiveMessage");
+    return () => {
+      socket.off('connect');
+      socket.off('connect_error');
+      socket.off('reconnect_attempt');
+      socket.off('disconnect');
+      socket.off('receiveMessage');
+    };
   }, []);
 
   // ✅ Send user message
