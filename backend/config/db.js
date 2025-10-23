@@ -8,7 +8,10 @@ const connectDB = async () => {
     // Log connection attempt (but not the full URI for security)
     console.log(`Attempting MongoDB connection to ${mongoUri.split('@').pop()}`);
     
-    await mongoose.connect(mongoUri);
+    // Remove deprecated options - they have no effect in MongoDB Driver 4.0+
+    await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 5000 // Wait 5 seconds before timing out
+    });
     
     // Log successful connection
     console.log('✅ MongoDB connected successfully to', 
