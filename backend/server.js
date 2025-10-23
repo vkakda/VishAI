@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 
 
 const connectDB = require('./config/db');
+const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');
 const chatRoutes = require('./routes/chat.route');
@@ -45,6 +46,17 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/chat', chatRoutes);
+
+// Simple health check for debugging deployments
+app.get('/api/health', async (req, res) => {
+  try {
+    const dbState = mongoose.connection.readyState; // 0 = disconnected, 1 = connected
+    res.json({ ok: true, dbState, env: { port: PORT } });
+  } catch (err) {
+    console.error('Health check error:', err);
+    res.status(500).json({ ok: false, error: 'Health check failed' });
+  }
+});
 
 
 

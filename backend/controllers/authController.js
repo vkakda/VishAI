@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 exports.signup = async (req, res) => {
   const { username, email, password } = req.body;
     try {
+    console.log(`Signup attempt for email: ${email}`);
     // Check if user already exists
     let user = await User.findOne({ email });
     if (user) {
@@ -24,8 +25,8 @@ exports.signup = async (req, res) => {
 
     res.status(201).json({ token, message: 'User registered successfully' });
     } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server error');
+    console.error('Signup error:', error);
+    res.status(500).json({ message: 'Server error during signup' });
   }
 };
 
@@ -33,6 +34,7 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   const { email, password } = req.body;
     try {
+    console.log(`Login attempt for email: ${email}`);
 
     // Check if user exists
     const user = await User.findOne({ email });
@@ -52,7 +54,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign({id:user._id}, process.env.JWT_SECRET, { expiresIn: '1d' });
     res.status(200).json({ token, message: 'Login successful' });
     } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server error');
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Server error during login' });
   } 
 };
