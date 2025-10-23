@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import axios from "axios";
 
 // ✅ Stable socket connection
-const socket = io("http://localhost:5000", { transports: ["websocket"] });
+const socket = io(import.meta.env.VITE_SERVER_URL, { transports: ["websocket"] });
 
 export default function Chat({ userId }) {
   const [messages, setMessages] = useState([]);
@@ -20,7 +20,7 @@ export default function Chat({ userId }) {
         const token = localStorage.getItem("token");
         if (!token) return console.error("No token found");
 
-        const res = await axios.get("http://localhost:5000/api/chat/history", {
+        const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/chat/history`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
