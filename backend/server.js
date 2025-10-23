@@ -23,11 +23,17 @@ connectDB();
 
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
+
+// Allow configuring frontend origins via environment variable (comma-separated)
+const frontendOrigins = (process.env.FRONTEND_URLS || 'http://localhost:5173,https://vishai.netlify.app,https://vish-ai.vercel.app')
+  .split(',')
+  .map((u) => u.trim().replace(/\/$/, ''))
+  .filter(Boolean);
 
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173','https://vishai.netlify.app/' ],
+    origin: frontendOrigins,
     methods: ["GET", "POST"],
   },
 });
@@ -83,4 +89,4 @@ app.get("/", (req, res) => {
 });
 
 
-server.listen(5000, () => console.log("✅ Server running on port 5000"));
+server.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));

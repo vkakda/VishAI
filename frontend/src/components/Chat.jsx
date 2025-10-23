@@ -2,8 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
 
+// Normalize base URL and create socket
+const BASE = (import.meta.env.VITE_SERVER_URL || 'http://localhost:5000').replace(/\/$/, '');
 // ✅ Stable socket connection
-const socket = io(import.meta.env.VITE_SERVER_URL, { transports: ["websocket"] });
+const socket = io(BASE, { transports: ["websocket"] });
 
 export default function Chat({ userId }) {
   const [messages, setMessages] = useState([]);
@@ -20,13 +22,14 @@ export default function Chat({ userId }) {
         const token = localStorage.getItem("token");
         if (!token) return console.error("No token found");
 
-        const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/chat/history`, {
+        const res = await axios.get(`${BASE}/api/chat/history`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         setMessages(res.data.messages || []);
       } catch (err) {
-        console.error("Error fetching chat history:", err);
+        const serverMsg = err?.response?.data?.message;
+        console.error('Error fetching chat history:', serverMsg || err);
       }
     };
 

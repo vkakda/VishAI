@@ -13,11 +13,13 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/auth/signup`, form);
+      const BASE = (import.meta.env.VITE_SERVER_URL || 'http://localhost:5000').replace(/\/$/, '');
+      await axios.post(`${BASE}/api/auth/signup`, form);
       alert("Signup successful! Please login.");
       navigate("/login");
-    } catch {
-      alert("Error during signup.");
+    } catch (err) {
+      const serverMsg = err?.response?.data?.message;
+      alert(serverMsg || "Error during signup.");
     }
   };
 

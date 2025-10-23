@@ -10,14 +10,18 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const BASE = (import.meta.env.VITE_SERVER_URL || 'http://localhost:5000').replace(/\/$/, '');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/auth/login`, form);
+      const res = await axios.post(`${BASE}/api/auth/login`, form);
       localStorage.setItem("token", res.data.token);
       navigate("/chat");
     } catch (err) {
-      alert("Invalid credentials");
+      // show backend message when available to help debugging
+      const serverMsg = err?.response?.data?.message;
+      alert(serverMsg || "Invalid credentials");
     }
   };
 
