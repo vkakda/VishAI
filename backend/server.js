@@ -27,7 +27,7 @@ const PORT = process.env.PORT;
 
 const io = new Server(server, {
   cors: {
-    origin: ['https://vishai.netlify.app', 'http://localhost:5173'],
+    origin: ['http://localhost:5173','https://vishai.netlify.app/' ],
     methods: ["GET", "POST"],
   },
 });
