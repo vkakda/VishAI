@@ -27,7 +27,7 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Allow configuring frontend origins via environment variable (comma-separated)
-const frontendOrigins = (process.env.FRONTEND_URLS || 'http://localhost:5173,https://vishai.netlify.app,https://vish-ai.vercel.app')
+const frontendOrigins = (process.env.FRONTEND_URLS || 'http://localhost:5173,https://vishai.netlify.app,https://vish-ai-frontend.vercel.app/')
   .split(',')
   .map((u) => u.trim().replace(/\/$/, ''))
   .filter(Boolean);
